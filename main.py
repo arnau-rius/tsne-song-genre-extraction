@@ -1,5 +1,8 @@
 import csv
 import requests
+import matplotlib.pyplot as plt
+
+numOfGenres = 5
 
 
 def get_dataset():
@@ -47,10 +50,30 @@ def save_dataset_features(dataset_features):
         writer.writerows(dataset_features)
 
 
-dataset = get_dataset()
-dataset_ids = get_dataset_ids(dataset)
-dataset_features = get_features(dataset_ids)
-save_dataset_features(dataset_features)
+def plot_tsne():
+    x = [[], [], [], [], []]
+    y = [[], [], [], [], []]
+    with open('./dataset_tsne.csv', 'r') as file:
+        reader = csv.reader(file)
+        for song in reader:
+            genre = int(float(song[2])) - 1
+            x[genre].append(float(song[0]))
+            y[genre].append(float(song[1]))
+
+    plt.scatter(x[0], y[0], color='red')
+    plt.scatter(x[1], y[1], color='blue')
+    plt.scatter(x[2], y[2], color='green')
+    plt.scatter(x[3], y[3], color='purple')
+    plt.scatter(x[4], y[4], color='yellow')
+
+    plt.show()
+
+
+plot_tsne()
+# dataset = get_dataset()
+# dataset_ids = get_dataset_ids(dataset)
+# dataset_features = get_features(dataset_ids)
+# save_dataset_features(dataset_features)
 # TODO: compute tsne using bhtsne lib
 
 
