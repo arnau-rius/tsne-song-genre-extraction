@@ -51,8 +51,8 @@ def save_dataset_features(dataset_features):
 
 
 def plot_tsne():
-    x = [[], [], [], [], []]
-    y = [[], [], [], [], []]
+    x = [[] for _ in range(numOfGenres)]
+    y = [[] for _ in range(numOfGenres)]
     with open('./dataset_tsne.csv', 'r') as file:
         reader = csv.reader(file)
         for song in reader:
