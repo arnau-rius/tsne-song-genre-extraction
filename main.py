@@ -43,7 +43,7 @@ def get_features(dataset_ids):
 
 def save_dataset_features(dataset_features):
     with open('dataset_features.csv', 'w', newline='') as file:
-        writer = csv.writer(file, delimiter=' ')
+        writer = csv.writer(file, delimiter=',')
         writer.writerows(dataset_features)
 
 
