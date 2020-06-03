@@ -69,11 +69,10 @@ def plot_tsne():
     plt.show()
 
 
-plot_tsne()
-# dataset = get_dataset()
-# dataset_ids = get_dataset_ids(dataset)
-# dataset_features = get_features(dataset_ids)
-# save_dataset_features(dataset_features)
+dataset = get_dataset()
+dataset_ids = get_dataset_ids(dataset)
+dataset_features = get_features(dataset_ids)
+save_dataset_features(dataset_features)
 # TODO: compute tsne using bhtsne lib
 
 
