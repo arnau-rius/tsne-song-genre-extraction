@@ -51,7 +51,7 @@ dataset = get_dataset()
 dataset_ids = get_dataset_ids(dataset)
 dataset_features = get_features(dataset_ids)
 save_dataset_features(dataset_features)
-// TODO: compute tsne using bhtsne lib
+# TODO: compute tsne using bhtsne lib
 
 
 def test_get_dataset_returns_list():
