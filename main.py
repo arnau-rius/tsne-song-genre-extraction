@@ -1,8 +1,11 @@
 import csv
 import requests
 import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
+from numpy import genfromtxt
 
 numOfGenres = 5
+numOfFeatures = 12
 
 
 def get_dataset():
@@ -40,7 +43,7 @@ def get_features(dataset_ids):
             a11 = data['highlevel']['tonal_atonal']['all']['tonal']
             a12 = data['highlevel']['voice_instrumental']['all']['voice']
             dataset_features.append(
-                [key, a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12])
+                [a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12])
     return dataset_features
 
 
@@ -48,6 +51,20 @@ def save_dataset_features(dataset_features):
     with open('dataset_features.csv', 'w', newline='') as file:
         writer = csv.writer(file, delimiter=',')
         writer.writerows(dataset_features)
+
+
+def get_dataset_feature():
+    return genfromtxt('dataset_features.csv', delimiter=',')
+
+
+def get_dataset_tsne(dataset_features):
+    return TSNE().fit_transform(dataset_features)
+
+
+def save_dataset_tsne(dataset_tsne):
+    with open('dataset_tsne.csv', 'w', newline='') as file:
+        writer = csv.writer(file, delimiter=',')
+        writer.writerows(dataset_tsne)
 
 
 def plot_tsne():
@@ -73,7 +90,9 @@ dataset = get_dataset()
 dataset_ids = get_dataset_ids(dataset)
 dataset_features = get_features(dataset_ids)
 save_dataset_features(dataset_features)
-# TODO: compute tsne using bhtsne lib
+dataset_features = get_dataset_feature()
+dataset_tsne = get_dataset_tsne(dataset_features)
+save_dataset_tsne(dataset_tsne)
 
 
 def test_get_dataset_returns_list():
