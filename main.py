@@ -2,7 +2,7 @@ import csv
 import requests
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
-from numpy import genfromtxt
+import numpy as np
 
 numOfGenres = 5
 numOfFeatures = 12
@@ -23,27 +23,33 @@ def get_dataset_ids(dataset):
 def get_features(dataset_ids):
     dataset_features = []
     separator = ';'
-    dataset_ids_query_param = separator.join(dataset_ids[:10])
-    url = f'https://acousticbrainz.org/api/v1/high-level?recording_ids={dataset_ids_query_param}'
-    response = requests.get(url)
-    response_json = response.json()
-    for key in response_json:
-        if(key != 'mbid_mapping'):
-            data = response_json[key]['0']
-            a01 = data['highlevel']['danceability']['all']['danceable']
-            a02 = data['highlevel']['gender']['all']['female']
-            a03 = data['highlevel']['mood_acoustic']['all']['acoustic']
-            a04 = data['highlevel']['mood_aggressive']['all']['aggressive']
-            a05 = data['highlevel']['mood_electronic']['all']['electronic']
-            a06 = data['highlevel']['mood_happy']['all']['happy']
-            a07 = data['highlevel']['mood_party']['all']['party']
-            a08 = data['highlevel']['mood_relaxed']['all']['relaxed']
-            a09 = data['highlevel']['mood_sad']['all']['sad']
-            a10 = data['highlevel']['timbre']['all']['bright']
-            a11 = data['highlevel']['tonal_atonal']['all']['tonal']
-            a12 = data['highlevel']['voice_instrumental']['all']['voice']
-            dataset_features.append(
-                [a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12])
+    # separate in  batches of 10 ids / request
+    batch_size = 10
+    num_batches = int(len(dataset_ids) / batch_size)
+    dataset_ids_query_param_batches = np.array_split(dataset_ids, num_batches)
+    # for each batch retreive features
+    for dataset_ids_query_param_batch in dataset_ids_query_param_batches:
+        dataset_ids_query_param = separator.join(dataset_ids_query_param_batch)
+        url = f'https://acousticbrainz.org/api/v1/high-level?recording_ids={dataset_ids_query_param}'
+        response = requests.get(url)
+        response_json = response.json()
+        for key in response_json:
+            if(key != 'mbid_mapping'):
+                data = response_json[key]['0']
+                a01 = data['highlevel']['danceability']['all']['danceable']
+                a02 = data['highlevel']['gender']['all']['female']
+                a03 = data['highlevel']['mood_acoustic']['all']['acoustic']
+                a04 = data['highlevel']['mood_aggressive']['all']['aggressive']
+                a05 = data['highlevel']['mood_electronic']['all']['electronic']
+                a06 = data['highlevel']['mood_happy']['all']['happy']
+                a07 = data['highlevel']['mood_party']['all']['party']
+                a08 = data['highlevel']['mood_relaxed']['all']['relaxed']
+                a09 = data['highlevel']['mood_sad']['all']['sad']
+                a10 = data['highlevel']['timbre']['all']['bright']
+                a11 = data['highlevel']['tonal_atonal']['all']['tonal']
+                a12 = data['highlevel']['voice_instrumental']['all']['voice']
+                dataset_features.append(
+                    [a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12])
     return dataset_features
 
 
@@ -54,7 +60,7 @@ def save_dataset_features(dataset_features):
 
 
 def get_dataset_feature():
-    return genfromtxt('dataset_features.csv', delimiter=',')
+    return np.genfromtxt('dataset_features.csv', delimiter=',')
 
 
 def get_dataset_tsne(dataset_features):
