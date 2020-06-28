@@ -20,6 +20,12 @@ def get_dataset_ids(dataset):
     return [song[0] for song in dataset]
 
 
+def get_dataset_genres(dataset):
+    genres = ['Alternative Rock', 'Classical',
+              'Jazz', 'Dance & Electronic', 'Rap & Hip-Hop']
+    return np.array([float(genres.index(song[1]) + 1) for song in dataset])
+
+
 def get_features(dataset_ids):
     dataset_features = []
     separator = ';'
@@ -73,6 +79,16 @@ def save_dataset_tsne(dataset_tsne):
         writer.writerows(dataset_tsne)
 
 
+def save_dataset_tsne_with_genres(dataset_tsne, dataset_genres):
+    dataset_tsne_with_genres = []
+    for index, song_tsne in enumerate(dataset_tsne):
+        dataset_tsne_with_genres.append(
+            [song_tsne[0], song_tsne[1], dataset_genres[index]])
+    with open('dataset_tsne_with_genres.csv', 'w', newline='') as file:
+        writer = csv.writer(file, delimiter='\t')
+        writer.writerows(dataset_tsne_with_genres)
+
+
 def plot_tsne():
     x = [[] for _ in range(numOfGenres)]
     y = [[] for _ in range(numOfGenres)]
@@ -99,6 +115,8 @@ save_dataset_features(dataset_features)
 dataset_features = get_dataset_feature()
 dataset_tsne = get_dataset_tsne(dataset_features)
 save_dataset_tsne(dataset_tsne)
+dataset_genres = get_dataset_genres(dataset)
+save_dataset_tsne_with_genres(dataset_tsne, dataset_genres)
 
 
 def test_get_dataset_returns_list():
